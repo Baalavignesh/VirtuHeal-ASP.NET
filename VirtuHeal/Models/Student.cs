@@ -21,12 +21,11 @@ namespace VirtuHeal.Models
         public string location { get; set; } = string.Empty;
 
         [Required]
-        public int college_id { get; set; } 
-
-        [Required]
         public int number { get; set; }
 
         [Required]
+        public int college_id { get; set;  }
+
         public int my_psychiatrist { get; set; }
     }
 }

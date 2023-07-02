@@ -11,7 +11,12 @@ namespace VirtuHeal.Data
         {
 
         }
-        public DbSet<VirtuHeal.Models.User>? Users { get; set; }
+
+        public DbSet<User>? User { get; set; }
+        public DbSet<Student>? Students { get; set; }
+        public DbSet<Psychiatrist>? Psychiatrists { get; set; }
+        public DbSet<StudentQuestions>? StudentQuestions { get; set; }
+        public DbSet<PsychiatristpQuestions>? PsychiatristpQuestions { get; set; }
 
     }
 }
