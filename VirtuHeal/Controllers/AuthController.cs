@@ -11,7 +11,6 @@ namespace VirtuHeal.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
 
         private readonly IUserService _userService;
         private readonly IPasswordService _passwordService;
@@ -52,9 +51,9 @@ namespace VirtuHeal.Controllers
 
 
         [HttpPost("registerstudent")]
-        public async Task<ActionResult<User>> RegisterStudent(StudentInfoDto request, int user_id)
+        public async Task<ActionResult<User>> RegisterStudent(StudentInfoDto request)
         {
-            var response = await _userService.StudentUser(request, user_id);
+            var response = await _userService.StudentUser(request);
 
             if (response.Data == null)
             {
@@ -64,9 +63,9 @@ namespace VirtuHeal.Controllers
         }
 
         [HttpPost("registerpsychiatrist")]
-        public async Task<ActionResult<User>> RegisterPsychiatrist(PsychiatristInfoDto request, int user_id)
+        public async Task<ActionResult<User>> RegisterPsychiatrist(PsychiatristInfoDto request)
         {
-            var response = await _userService.PsychiatristUser(request, user_id);
+            var response = await _userService.PsychiatristUser(request);
 
             if (response.Data == null)
             {
@@ -92,7 +91,7 @@ namespace VirtuHeal.Controllers
             }
 
             string jwt = _jwtService.CreateToken(response.Data);
-            return Ok(new { jwt, response.Data.user_id });
+            return Ok(new { jwt, response.Data });
         }
     }
 }

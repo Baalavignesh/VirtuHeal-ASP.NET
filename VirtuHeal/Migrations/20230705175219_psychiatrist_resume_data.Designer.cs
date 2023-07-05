@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtuHeal.Data;
 
@@ -10,9 +11,11 @@ using VirtuHeal.Data;
 namespace VirtuHeal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230705175219_psychiatrist_resume_data")]
+    partial class psychiatrist_resume_data
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,9 +69,8 @@ namespace VirtuHeal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("number")
+                        .HasColumnType("int");
 
                     b.Property<string>("qualification")
                         .IsRequired()
@@ -118,7 +120,8 @@ namespace VirtuHeal.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("psychiatrist_id");
+                    b.HasIndex("psychiatrist_id")
+                        .IsUnique();
 
                     b.ToTable("PsychiatristpQuestions");
                 });
@@ -262,8 +265,8 @@ namespace VirtuHeal.Migrations
             modelBuilder.Entity("VirtuHeal.Models.PsychiatristpQuestions", b =>
                 {
                     b.HasOne("VirtuHeal.Models.Psychiatrist", "Psychiatrist")
-                        .WithMany()
-                        .HasForeignKey("psychiatrist_id")
+                        .WithOne("PsychiatristpQuestions")
+                        .HasForeignKey("VirtuHeal.Models.PsychiatristpQuestions", "psychiatrist_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -290,6 +293,12 @@ namespace VirtuHeal.Migrations
                         .IsRequired();
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.Psychiatrist", b =>
+                {
+                    b.Navigation("PsychiatristpQuestions")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VirtuHeal.Models.User", b =>

@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace VirtuHeal.Models
 {
-    [Table("User")]
     public class User
     {
         [Key]
@@ -26,5 +25,9 @@ namespace VirtuHeal.Models
 
         [Required]
         public string role { get; set; }
+
+        public virtual Student Student { get; set; }
+
+        public virtual Psychiatrist Psychiatrist { get; set; }
     }
 }

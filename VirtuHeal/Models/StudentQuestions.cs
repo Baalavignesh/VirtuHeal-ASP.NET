@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace VirtuHeal.Models
 {
@@ -8,7 +10,7 @@ namespace VirtuHeal.Models
 		[Key]
 		public int id { get; set; }
 
-        [Required]
+        [ForeignKey("Student")]
         public int student_id { get; set; }
 
         [Required]
@@ -27,6 +29,8 @@ namespace VirtuHeal.Models
         public string question4 { get; set; } = string.Empty;
         [Required]
         public string answer4 { get; set; } = string.Empty;
+
+        public virtual Student Student { get; set; }
 
     }
 }

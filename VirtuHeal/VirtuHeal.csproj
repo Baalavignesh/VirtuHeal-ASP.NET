@@ -31,9 +31,11 @@
     <Folder Include="DTOs\" />
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Services\" />
+    <None Remove="Migrations\" />
   </ItemGroup>
 </Project>

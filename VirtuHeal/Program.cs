@@ -33,16 +33,6 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSignalR();
 
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("ClientPermission", policy =>
-    {
-        policy.AllowAnyHeader()
-            .AllowAnyMethod()
-            .WithOrigins("http://localhost:3000")
-            .AllowCredentials();
-    });
-});
 
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("sql-connection"))
@@ -62,14 +52,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermission", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("http://localhost:3000")
+            .AllowCredentials();
+    });
+});
+
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-
+builder.Services.AddScoped<IFetchService, FetchService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 
 var app = builder.Build();
 
-app.UseCors("ClientPermission");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -79,6 +81,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("ClientPermission");
 
 app.UseAuthentication();
 

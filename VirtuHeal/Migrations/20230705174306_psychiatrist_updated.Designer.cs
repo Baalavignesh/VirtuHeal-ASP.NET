@@ -11,8 +11,8 @@ using VirtuHeal.Data;
 namespace VirtuHeal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230630174105_VirtuHeal-auth-2")]
-    partial class VirtuHealauth2
+    [Migration("20230705174306_psychiatrist_updated")]
+    partial class psychiatrist_updated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace VirtuHeal.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("VirtuHeal.Models.College", b =>
+                {
+                    b.Property<int>("college_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("college_id"));
+
+                    b.Property<string>("college_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("is_partner")
+                        .HasColumnType("bit");
+
+                    b.HasKey("college_id");
+
+                    b.ToTable("Colleges");
+                });
+
             modelBuilder.Entity("VirtuHeal.Models.Psychiatrist", b =>
                 {
                     b.Property<int>("psychiatrist_id")
@@ -32,12 +52,18 @@ namespace VirtuHeal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("psychiatrist_id"));
 
+                    b.Property<int>("age")
+                        .HasColumnType("int");
+
                     b.Property<int>("college_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("location")
+                    b.Property<string>("gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("is_verified")
+                        .HasColumnType("bit");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -50,10 +76,21 @@ namespace VirtuHeal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("resume")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("resume_url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("user_id")
                         .HasColumnType("int");
 
                     b.HasKey("psychiatrist_id");
+
+                    b.HasIndex("user_id")
+                        .IsUnique();
 
                     b.ToTable("Psychiatrists");
                 });
@@ -87,6 +124,9 @@ namespace VirtuHeal.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("psychiatrist_id")
+                        .IsUnique();
+
                     b.ToTable("PsychiatristpQuestions");
                 });
 
@@ -98,10 +138,13 @@ namespace VirtuHeal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("student_id"));
 
+                    b.Property<int>("age")
+                        .HasColumnType("int");
+
                     b.Property<int>("college_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("location")
+                    b.Property<string>("gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -123,6 +166,9 @@ namespace VirtuHeal.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("student_id");
+
+                    b.HasIndex("user_id")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -172,6 +218,8 @@ namespace VirtuHeal.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("student_id");
+
                     b.ToTable("StudentQuestions");
                 });
 
@@ -205,6 +253,65 @@ namespace VirtuHeal.Migrations
                     b.HasKey("user_id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.Psychiatrist", b =>
+                {
+                    b.HasOne("VirtuHeal.Models.User", "User")
+                        .WithOne("Psychiatrist")
+                        .HasForeignKey("VirtuHeal.Models.Psychiatrist", "user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.PsychiatristpQuestions", b =>
+                {
+                    b.HasOne("VirtuHeal.Models.Psychiatrist", "Psychiatrist")
+                        .WithOne("PsychiatristpQuestions")
+                        .HasForeignKey("VirtuHeal.Models.PsychiatristpQuestions", "psychiatrist_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Psychiatrist");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.Student", b =>
+                {
+                    b.HasOne("VirtuHeal.Models.User", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("VirtuHeal.Models.Student", "user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.StudentQuestions", b =>
+                {
+                    b.HasOne("VirtuHeal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("student_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.Psychiatrist", b =>
+                {
+                    b.Navigation("PsychiatristpQuestions")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VirtuHeal.Models.User", b =>
+                {
+                    b.Navigation("Psychiatrist")
+                        .IsRequired();
+
+                    b.Navigation("Student")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

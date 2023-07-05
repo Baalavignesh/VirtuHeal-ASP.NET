@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VirtuHeal.Models
 {
@@ -9,16 +10,20 @@ namespace VirtuHeal.Models
         public int student_id { get; set; }
 
         [Required]
+        [ForeignKey("User")]
         public int user_id { get; set; }
 
         [Required]
         public string name { get; set; } = string.Empty;
 
         [Required]
+        public int age { get; set; }
+
+        [Required]
         public string qualification { get; set; } = string.Empty;
 
         [Required]
-        public string location { get; set; } = string.Empty;
+        public string gender { get; set; } = string.Empty;
 
         [Required]
         public int number { get; set; }
@@ -27,5 +32,7 @@ namespace VirtuHeal.Models
         public int college_id { get; set;  }
 
         public int my_psychiatrist { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

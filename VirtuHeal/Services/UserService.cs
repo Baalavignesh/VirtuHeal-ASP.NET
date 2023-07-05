@@ -14,8 +14,8 @@ namespace VirtuHeal.Services
         Task<ServiceResponse<User>> CheckUser(string input_username);
         Task<ServiceResponse<User>> RegisterUser(string username, byte[] PasswordHash, byte[] passwordSalt, string role);
         Task<ServiceResponse<User>> LoginUser(LoginDto request);
-        Task<ServiceResponse<Student>> StudentUser(StudentInfoDto request, int user_id);
-        Task<ServiceResponse<Psychiatrist>> PsychiatristUser(PsychiatristInfoDto request, int user_id);
+        Task<ServiceResponse<Student>> StudentUser(StudentInfoDto request);
+        Task<ServiceResponse<Psychiatrist>> PsychiatristUser(PsychiatristInfoDto request);
 
 
     }
@@ -73,16 +73,17 @@ namespace VirtuHeal.Services
         }
 
 
-        public async Task<ServiceResponse<Student>> StudentUser(StudentInfoDto request, int user_id)
+        public async Task<ServiceResponse<Student>> StudentUser(StudentInfoDto request)
         {
             Student NewStudent = new Student()
             {
-                user_id = user_id,
+                user_id = request.user_id,
                 name = request.name,
                 qualification = request.qualification,
-                location = request.location,
+                gender = request.gender,
                 number = request.number,
                 college_id = request.college_id,
+                age = request.age,
             };
 
 
@@ -119,16 +120,20 @@ namespace VirtuHeal.Services
         }
 
 
-        public async Task<ServiceResponse<Psychiatrist>> PsychiatristUser(PsychiatristInfoDto request, int user_id)
+        public async Task<ServiceResponse<Psychiatrist>> PsychiatristUser(PsychiatristInfoDto request)
         {
+            Console.WriteLine(request);
             Psychiatrist NewPsychiatrist = new Psychiatrist()
             {
-                user_id = user_id,
+                user_id = request.user_id,
                 name = request.name,
+                age = request.age,
                 qualification = request.qualification,
-                location = request.location,
+                gender = request.gender,
                 number = request.number,
                 college_id = request.college_id,
+                is_verified = false,
+                resume_url = request.resume_url,
             };
 
 

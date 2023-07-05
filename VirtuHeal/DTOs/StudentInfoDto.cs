@@ -4,6 +4,9 @@ namespace VirtuHeal.DTOs
 {
 	public class StudentInfoDto
 	{
+        public int student_id { get; set; }
+
+        public int my_pyschiatrist { get; set; }
 
         [Required]
         public int user_id { get; set; }
@@ -12,10 +15,13 @@ namespace VirtuHeal.DTOs
         public string name { get; set; } = string.Empty;
 
         [Required]
+        public int age { get; set; }
+
+        [Required]
         public string qualification { get; set; } = string.Empty;
 
         [Required]
-        public string location { get; set; } = string.Empty;
+        public string gender { get; set; } = string.Empty;
 
         [Required]
         public int number { get; set; }
