@@ -11,7 +11,7 @@ namespace VirtuHeal.Models
 
         [Required]
         [ForeignKey("User")]
-        public int user_id { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public string name { get; set; } = string.Empty;
@@ -26,7 +26,7 @@ namespace VirtuHeal.Models
         public string gender { get; set; } = string.Empty;
 
         [Required]
-        public int number { get; set; }
+        public string number { get; set; } = string.Empty;
 
         [Required]
         public int college_id { get; set;  }
@@ -34,5 +34,6 @@ namespace VirtuHeal.Models
         public int my_psychiatrist { get; set; }
 
         public virtual User User { get; set; }
+        public virtual ICollection<MyChats> MyChats { get; set; }
     }
 }

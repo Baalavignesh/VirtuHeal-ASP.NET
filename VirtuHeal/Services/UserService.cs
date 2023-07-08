@@ -13,7 +13,7 @@ namespace VirtuHeal.Services
     {
         Task<ServiceResponse<User>> CheckUser(string input_username);
         Task<ServiceResponse<User>> RegisterUser(string username, byte[] PasswordHash, byte[] passwordSalt, string role);
-        Task<ServiceResponse<User>> LoginUser(LoginDto request);
+        Task<ServiceResponse<UserDto>> LoginUser(LoginDto request);
         Task<ServiceResponse<Student>> StudentUser(StudentInfoDto request);
         Task<ServiceResponse<Psychiatrist>> PsychiatristUser(PsychiatristInfoDto request);
 
@@ -28,7 +28,7 @@ namespace VirtuHeal.Services
         {
             _context = context;
         }
-        
+
         public async Task<ServiceResponse<User>> CheckUser(string input_username)
         {
             var response = new ServiceResponse<User>();
@@ -47,7 +47,7 @@ namespace VirtuHeal.Services
             return response;
         }
 
-        public async Task<ServiceResponse<User>> RegisterUser(string username, byte[] PasswordHash,  byte[] passwordSalt, string role)
+        public async Task<ServiceResponse<User>> RegisterUser(string username, byte[] PasswordHash, byte[] passwordSalt, string role)
         {
             User NewUser = new User()
             {
@@ -66,7 +66,7 @@ namespace VirtuHeal.Services
                 response.Error = "Db Server Error";
             }
             _context.User.Add(NewUser);
-            
+
             await _context.SaveChangesAsync();
             response.Data = NewUser;
             return response;
@@ -77,7 +77,7 @@ namespace VirtuHeal.Services
         {
             Student NewStudent = new Student()
             {
-                user_id = request.user_id,
+                UserId = request.user_id,
                 name = request.name,
                 qualification = request.qualification,
                 gender = request.gender,
@@ -125,7 +125,7 @@ namespace VirtuHeal.Services
             Console.WriteLine(request);
             Psychiatrist NewPsychiatrist = new Psychiatrist()
             {
-                user_id = request.user_id,
+                UserId = request.user_id,
                 name = request.name,
                 age = request.age,
                 qualification = request.qualification,
@@ -166,9 +166,9 @@ namespace VirtuHeal.Services
         }
 
 
-        public async Task<ServiceResponse<User>> LoginUser(LoginDto request)
+        public async Task<ServiceResponse<UserDto>> LoginUser(LoginDto request)
         {
-            var response = new ServiceResponse<User>();
+            var response = new ServiceResponse<UserDto>();
 
             if (_context.User == null)
             {
@@ -176,13 +176,43 @@ namespace VirtuHeal.Services
             }
             var user = await _context.User.FirstOrDefaultAsync(u => u.username == request.Username);
 
+            System.Diagnostics.Debug.WriteLine(user);
+
             if (user == null)
             {
                 response.Error = "User not found";
             }
             else
             {
-                response.Data = user;
+                int myId = 0;
+                if (user.role == "student")
+                {
+                    myId = await _context.Students.Where(s => s.UserId == user.user_id)
+                                        .Select(s => s.student_id)
+                                        .FirstOrDefaultAsync();
+
+
+                }
+                else if (user.role == "psychiatrist")
+                {
+                    myId = await _context.Psychiatrists.Where(s => s.UserId == user.user_id)
+                                        .Select(s => s.psychiatrist_id)
+                                        .FirstOrDefaultAsync();
+                }
+
+                var userDto = new UserDto
+                {
+                    UserId = user.user_id,
+                    Username = user.username,
+                    password_hash = user.password_hash,
+                    password_salt = user.password_salt,
+                    Role = user.role,
+                    MyId = myId
+                    // Map other properties from User to UserDto
+                };
+
+                response.Data = userDto;
+
             }
             return response;
         }

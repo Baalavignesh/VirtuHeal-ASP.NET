@@ -24,7 +24,7 @@ namespace VirtuHeal.DTOs
         public string gender { get; set; } = string.Empty;
 
         [Required]
-        public int number { get; set; }
+        public string number { get; set; }
 
         [Required]
         public int college_id { get; set; }

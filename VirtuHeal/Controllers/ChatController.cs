@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VirtuHeal.Services;
+using VirtuHeal.Models;
+using VirtuHeal.DTOs;
 
 namespace VirtuHeal.Controllers
 {
@@ -11,6 +9,32 @@ namespace VirtuHeal.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
+        private readonly ISingleChatService _ChatService;
+
+
+        public ChatController(ISingleChatService ChatService)
+        {
+            _ChatService = ChatService;
+        }
+
+
+        [HttpGet("GetChat/{chatId}")]
+        public async Task<ActionResult<MyChats>> GetChat(int chatId)
+        {
+            var response = await _ChatService.GetSingleChat(chatId);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost("AddChatMessage")]
+        public async Task<ActionResult<bool>> AddChatMessage(NewSingleChatDto request)
+        {
+            await _ChatService.AddSingleChat(request);
+
+            return Ok(true);
+        }
+
 
     }
 }

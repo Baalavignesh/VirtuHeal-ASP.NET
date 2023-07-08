@@ -11,7 +11,7 @@ namespace VirtuHeal.Models
 
         [Required]
         [ForeignKey("User")]
-        public int user_id { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public string name { get; set; } = string.Empty;
@@ -38,6 +38,8 @@ namespace VirtuHeal.Models
         public string resume_url { get; set; } = string.Empty;
 
         public virtual User User { get; set; }
+        public virtual ICollection<MyChats> MyChats { get; set; }
+
 
     }
 }

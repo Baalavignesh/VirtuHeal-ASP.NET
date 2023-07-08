@@ -33,11 +33,7 @@ namespace VirtuHeal.Controllers
             else {
                 return Ok(db_response.Data);
             }
-        }
-
-
-        //AcceptorDenySchedule
-        //SheduleAppointment
+        } 
         //GetMyChats
 
     }

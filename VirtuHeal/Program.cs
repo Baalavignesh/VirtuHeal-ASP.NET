@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using VirtuHeal.Data;
+using VirtuHeal.Hubs;
 using VirtuHeal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,6 +70,9 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IFetchService, FetchService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IPsychiatristService, PsychiatristService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<ISingleChatService, SingleChatService>();
 
 var app = builder.Build();
 
@@ -89,5 +93,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<SingleChatHub>("/singleChatHub");
 
 app.Run();

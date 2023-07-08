@@ -27,7 +27,6 @@ namespace VirtuHeal.Models
         public string role { get; set; }
 
         public virtual Student Student { get; set; }
-
         public virtual Psychiatrist Psychiatrist { get; set; }
     }
 }

@@ -16,11 +16,13 @@ namespace VirtuHeal.Controllers
     public class PsychiatristController : ControllerBase
     {
         private readonly IPsychiatristService _psychiatristService;
+        private readonly IAppointmentService _appointmentService;
 
 
-        public PsychiatristController(IPsychiatristService psychiatristService)
+        public PsychiatristController(IPsychiatristService psychiatristService, IAppointmentService appointmentService)
         {
             _psychiatristService = psychiatristService;
+            _appointmentService = appointmentService;
         }
 
         // GetAllStudents
@@ -30,10 +32,6 @@ namespace VirtuHeal.Controllers
             var response = _psychiatristService.GetMyStudents(pyschiatrist_id);
             return Ok(response);
         }
-
-        // AcceptorDenySchedule
-        // SheduleAppointment
-
     }
 
 }

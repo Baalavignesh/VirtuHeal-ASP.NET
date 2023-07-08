@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using VirtuHeal.DTOs;
 using VirtuHeal.Models;
 using Microsoft.AspNetCore.Mvc;
