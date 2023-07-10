@@ -29,6 +29,13 @@ namespace VirtuHeal.Data
                 .HasForeignKey<Psychiatrist>(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Student - College (One to Many)
+            //modelBuilder.Entity<Student>()
+            //    .HasMany(c => c.College)
+            //    .WithOne(c => c.Student)
+            //    .HasForeignKey<College>(c => c.college_id)
+            //    .OnDelete(DeleteBehavior.Restrict);
+
 
 
             // Student - MyChats  (One to Many)

@@ -29,11 +29,13 @@ namespace VirtuHeal.Models
         public string number { get; set; } = string.Empty;
 
         [Required]
+        //[ForeignKey("College")]
         public int college_id { get; set;  }
 
         public int my_psychiatrist { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<MyChats> MyChats { get; set; }
+        //public virtual ICollection<College> College { get; set; }
     }
 }

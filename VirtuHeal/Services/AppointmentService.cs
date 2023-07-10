@@ -28,8 +28,26 @@ namespace VirtuHeal.Services
             _context = context;
         }
 
+        private async Task<bool> IsPsychiatristAvailable(int psychiatristId, DateTime startTime)
+        {
+            DateTime endTime = startTime.AddHours(1);
+            bool isAvailable = await _context.Appointments
+                    .AnyAsync(a => a.PsychiatristId == psychiatristId && a.Time >= startTime && a.Time < endTime);
+            return !isAvailable;
+        }
+
+
         public async Task<ServiceResponse<Appointment>> SetAppointment(Appointment request)
         {
+            var response = new ServiceResponse<Appointment>();
+            bool isAvailable = await IsPsychiatristAvailable(request.PsychiatristId, request.Time);
+
+            if (!isAvailable)
+            {
+                response.Error = "Psychiatrist not available for the given time. Please choose a different time.";
+                return response;
+            }
+
             Appointment NewAppointment = new Appointment()
             {
                 StudentId = request.StudentId,
@@ -38,9 +56,6 @@ namespace VirtuHeal.Services
                 Time = request.Time,
                 Status = request.Status,
             };
-
-
-            var response = new ServiceResponse<Appointment>();
 
             if (_context.Appointments == null)
             {

@@ -11,8 +11,11 @@ namespace VirtuHeal.Models
 		[Required]
 		public string college_name { get; set; } = string.Empty;
 
-        [Required]
-        public bool is_partner { get; set; } = false;
+		[Required]
+		public bool is_partner { get; set; } = false;
+
+		//public virtual Student Student { get; set; }
+		//public virtual Psychiatrist Psychiatrist { get; set; }
 
     }
 }

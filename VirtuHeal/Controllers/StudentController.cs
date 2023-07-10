@@ -21,8 +21,24 @@ namespace VirtuHeal.Controllers
             _studentService = studentService;
         }
 
+        //GetMyInfo
+        [HttpGet("GetMyInfo")]
+        public async Task<ActionResult<Student>> GetMyInfo(int student_id)
+        {
+            var db_response = await _studentService.GetMyInfo(student_id);
+
+            if (db_response.Data == null)
+            {
+                return NotFound(new { db_response.Error });
+            }
+            else
+            {
+                return Ok(db_response.Data);
+            }
+        }
+
         //GetMyPsychiatrist
-        [HttpGet("getmypsychiatrist")]
+        [HttpGet("GetMyPsychiatrist")]
         public async Task<ActionResult<Psychiatrist>> GetMyPsychiatrist(int psychiatrist_id)
         {
             var db_response = await _studentService.GetMyPsychiatrist(psychiatrist_id);
@@ -33,7 +49,23 @@ namespace VirtuHeal.Controllers
             else {
                 return Ok(db_response.Data);
             }
-        } 
+        }
+
+        // GetVerified
+        [HttpGet("AssignPsychiatrist")]
+        public async Task<ActionResult<Psychiatrist>> AssignPsychiatrist(int student_id, int pyschiatrist_id)
+        {
+            var db_response = await _studentService.AssignPsychiatrist(student_id, pyschiatrist_id);
+            if (db_response.Data == null)
+            {
+                return NotFound(new { db_response.Error });
+            }
+            else
+            {
+                return Ok(db_response.Data);
+            }
+        }
+
         //GetMyChats
 
     }

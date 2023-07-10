@@ -14,7 +14,7 @@ namespace VirtuHeal.Models
 		public int StudentId { get; set; }
 
 		[Required]
-		public int PsychiatristId { get;set; }
+		public int PsychiatristId { get; set; }
 
 		[Required]
 		public string InitiatedBy { get; set; } = string.Empty;

@@ -25,13 +25,53 @@ namespace VirtuHeal.Controllers
             _appointmentService = appointmentService;
         }
 
+        //GetMyInfo
+        [HttpGet("GetMyInfo")]
+        public async Task<ActionResult<Student>> GetMyInfo(int psychiatrist_id)
+        {
+            var db_response = await _psychiatristService.GetMyInfo(psychiatrist_id);
+
+            if (db_response.Data == null)
+            {
+                return NotFound(new { db_response.Error });
+            }
+            else
+            {
+                return Ok(db_response.Data);
+            }
+        }
+
+
         // GetAllStudents
         [HttpGet("GetMyStudents")]
         public async Task<ActionResult<IEnumerable<Student>>> GetMyStudents(int pyschiatrist_id)
         {
-            var response = _psychiatristService.GetMyStudents(pyschiatrist_id);
-            return Ok(response);
+            var db_response = await _psychiatristService.GetMyStudents(pyschiatrist_id);
+            if (db_response.Data == null)
+            {
+                return NotFound(new { db_response.Error });
+            }
+            else
+            {
+                return Ok(db_response.Data);
+            }
         }
+
+        // GetVerified
+        [HttpGet("GetVerified")]
+        public async Task<ActionResult<Psychiatrist>> GetVerified(int pyschiatrist_id)
+        {
+            var db_response = await _psychiatristService.UpdateVerifyStatus(pyschiatrist_id);
+            if (db_response.Data == null)
+            {
+                return NotFound(new { db_response.Error });
+            }
+            else
+            {
+                return Ok(db_response.Data);
+            }
+        }
+
     }
 
 }
