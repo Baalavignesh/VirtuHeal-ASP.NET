@@ -12,10 +12,7 @@ namespace VirtuHeal.Models
         public int ParentChatId { get; set; }
 
         [Required]
-        public int StudentId { get; set; }
-
-        [Required]
-        public int PsychiatristId { get; set; }
+        public string SenderRole { get; set; } = string.Empty;
 
         [Required]
         public string Message { get; set; } = string.Empty;

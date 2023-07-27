@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Session;
 using VirtuHeal.Models;
 using Microsoft.EntityFrameworkCore;
 using VirtuHeal.Data;
+using System;
 
 namespace VirtuHeal.Hubs
 {
@@ -15,16 +16,17 @@ namespace VirtuHeal.Hubs
         {
             _context = context;
         }
+        private readonly object _lockObject = new object();
 
-        public async Task ChangeUserState(string userId, bool activity)
-        {
-            var user = await _context.User.FirstOrDefaultAsync(u => u.user_id == Convert.ToInt32(userId));
-            if (user != null)
-            {
-                user.is_online = activity;
-                await _context.SaveChangesAsync();
-            }
-        }
+        //public async Task ChangeUserState(string userId, bool activity)
+        //{
+        //    var user = await _context.User.FirstOrDefaultAsync(u => u.user_id == Convert.ToInt32(userId));
+        //lock (_lockObject)
+        //{
+        //    user.is_online = activity;
+        //    _context.SaveChanges();
+        //}
+        //}
 
         public override async Task OnConnectedAsync()
         {
@@ -45,7 +47,7 @@ namespace VirtuHeal.Hubs
                 ConnectionString = Context.ConnectionId
             };
 
-            await ChangeUserState(userId, true);
+            //await ChangeUserState(userId, true);
 
             await _context.UserSessions.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -57,12 +59,13 @@ namespace VirtuHeal.Hubs
             string userId = Context.GetHttpContext().Request.Query["userId"];
 
             Console.WriteLine("Disconnected" + userId);
+            Console.WriteLine(exception);
 
 
             UserSession user = await _context.UserSessions.FirstOrDefaultAsync(u => u.UserId == Convert.ToInt32(userId));
             _context.UserSessions.Remove(user);
             await _context.SaveChangesAsync();
-            await ChangeUserState(userId, false);
+            //await ChangeUserState(userId, false);
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -71,12 +74,12 @@ namespace VirtuHeal.Hubs
         [HubMethodName("SendMessage")]
         public async Task SendMessage(string receiverUserId, string message)
         {
-
             UserSession user = await _context.UserSessions.FirstOrDefaultAsync(u => u.UserId == Convert.ToInt32(receiverUserId));
-
+            Console.WriteLine(user);
             if (user != null)
             {
                 Console.WriteLine(user.ConnectionString);
+                Console.WriteLine("I am alive babtt");
                 await Clients.Client(user.ConnectionString).SendAsync("ReceiveMessage", message, receiverUserId);
             }
             else

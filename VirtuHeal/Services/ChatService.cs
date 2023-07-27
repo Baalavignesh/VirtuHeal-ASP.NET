@@ -12,7 +12,8 @@ namespace VirtuHeal.Services
     public interface ISingleChatService
     {
         Task<ServiceResponse<IEnumerable<SingleChatMessage>>> GetSingleChat(int ChatId);
-        Task<ServiceResponse<bool>> AddSingleChat(NewSingleChatDto request);
+        Task<ServiceResponse<MyChats>> GetChatId(int studentId, int psychiatristId);
+         Task<ServiceResponse<bool>> AddSingleChat(NewSingleChatDto request);
     }
     public class SingleChatService : ISingleChatService
     {
@@ -37,6 +38,26 @@ namespace VirtuHeal.Services
             return response;
         }
 
+
+
+        public async Task<ServiceResponse<MyChats>> GetChatId(int studentId, int psychiatristId)
+        {
+            var response = new ServiceResponse<MyChats>();
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            response.Data = await _context.MyChats.Where(sc => sc.StudentId == studentId && sc.PsychiatristId == psychiatristId).FirstOrDefaultAsync();
+
+            if (response.Data == null)
+            {
+                response.Error = "No chat found";
+            }
+
+            return response;
+        }
         public async Task<ServiceResponse<bool>> AddSingleChat(NewSingleChatDto request)
         {
             var response = new ServiceResponse<bool>();
@@ -51,10 +72,9 @@ namespace VirtuHeal.Services
 
                 var newSingleChatMessage = new SingleChatMessage
                 {
-                    StudentId = request.StudentId,
-                    PsychiatristId = request.PsychiatristId,
                     ParentChatId = existingSingleChat.MyChatId,
                     Message = request.Message,
+                    SenderRole = request.SenderRole,
                     Timestamp = DateTime.Now,
                     IsRead = false,
                 };
@@ -76,10 +96,9 @@ namespace VirtuHeal.Services
 
                 var newSingleChatMessage = new SingleChatMessage
                 {
-                    StudentId = request.StudentId,
-                    PsychiatristId = request.PsychiatristId,
                     ParentChatId = newMyChat.MyChatId,
                     Message = request.Message,
+                    SenderRole = request.SenderRole,
                     Timestamp = DateTime.Now
                 };
                 _context.SingleChatMessage.Add(newSingleChatMessage);

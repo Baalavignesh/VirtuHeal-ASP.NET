@@ -17,6 +17,13 @@ namespace VirtuHeal.Controllers
             _ChatService = ChatService;
         }
 
+        [HttpGet("GetChatId")]
+        public async Task<ActionResult<MyChats>> GetChat(int studentId, int psychiatristId)
+        {
+            var response = await _ChatService.GetChatId(studentId, psychiatristId);
+
+            return Ok(response);
+        }
 
         [HttpGet("GetChat/{chatId}")]
         public async Task<ActionResult<MyChats>> GetChat(int chatId)
